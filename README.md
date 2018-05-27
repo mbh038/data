@@ -3,8 +3,8 @@
 
 
 
-### DeathsFromTigers 
+### ABD all data
 
-Activities of 88 people at the time they were killed by tigers near Chitwan National Park, Nepal, from 1979 to 2006.
+Complete data set from Whitlock & Schluter 
+http://whitlockschluter.zoology.ubc.ca
 
-from: Whitlock & Schluter ex 2.2a
