@@ -4,6 +4,7 @@
 #
 # Michael Hunt, 28-05-2018
 
+library(here)
 
 ABDdownlaod <- function(chapter){
   if (chapter<10){
@@ -12,10 +13,17 @@ ABDdownlaod <- function(chapter){
   else{
     filenum=paste0(chapter)
   }
-  print(filenum)
   url=paste0("http://whitlockschluter.zoology.ubc.ca/wp-content/rcode/chap",filenum,".r")
   destfile=paste0("ABD_chap",filenum,".r")
-  download.file(url,destfile)  
+  
+  if(file.exists(destfile)){
+    print(paste(destfile,"already in /ADD_R_scripts_directory"))
+  }
+  
+  if(!file.exists(destfile)){
+    print(paste("downloading",filenum))
+    download.file(url,destfile)
+  }
 }
 
 for (chapter in c(2:4,6:13,15:20)){
