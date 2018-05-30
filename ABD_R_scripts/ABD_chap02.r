@@ -2,11 +2,15 @@
 # Download the R code on this page as a single file <a href="../wp-content/rcode/chap02.r">here.
 # ------------------------------------------------------------
 
+library(here)
+
 # Figure 2.1-2. <a href="../wp-content/data/chapter02/chap02f1_2locustSerotonin.csv">Locust serotonin
 # Strip chart of serotonin levels in the central nervous system of desert locusts that were experimentally crowded for 0 (the control group), 1, and 2 hours.
 # Read the data and store in data frame (here named locustData). The following command uses read.csv to grab the data from a file on the internet (on the current web site).
 
-locustData <- read.csv(url("http://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter02/chap02f1_2locustSerotonin.csv"))
+#locustData <- read.csv(url("http://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter02/chap02f1_2locustSerotonin.csv"))
+locustData <- read.csv(here("ABD_all_data","chapter02","chap02f1_2locustSerotonin.csv"))
+locustData <- read.csv(here("ABD_all_data","chapter02","chap02f1_2locustSerotonin.csv"))
 
 # Show the first few lines of the data, to ensure it read correctly. Determine the number of cases in the data.
 
@@ -96,7 +100,8 @@ par(oldpar)  # reverts graph settings back to default
 birdAbundanceData <- read.csv(url("http://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter02/chap02e2bDesertBirdAbundance.csv"))
 head(birdAbundanceData)
 
-# Generate a frequency table of the numeric bird abundance variable. The option right = FALSE ensures that abundance value 300 (for example) is counted in the 300-400 bin rather than in the 200-300 bin.
+# Generate a frequency table of the numeric bird abundance variable. The option right = FALSE ensures that abundance value 300
+# (for example) is counted in the 300-400 bin rather than in the 200-300 bin.
 
 birdAbundanceTable <- table(cut(birdAbundanceData$abundance, 
 	breaks = seq(0,650,by=50), right = FALSE))
@@ -131,6 +136,7 @@ head(salmonSizeData)
 hist(salmonSizeData$massKg, right = FALSE, breaks = seq(1,4,by=0.1), col = "firebrick")
 hist(salmonSizeData$massKg, right = FALSE, breaks = seq(1,4,by=0.3), col = "firebrick")
 hist(salmonSizeData$massKg, right = FALSE, breaks = seq(1,4,by=0.5), col = "firebrick")
+hist(salmonSizeData$massKg, right = FALSE, breaks = "FD", col = "firebrick")
 
 # ------------------------------------------------------------
 
@@ -141,7 +147,8 @@ hist(salmonSizeData$massKg, right = FALSE, breaks = seq(1,4,by=0.5), col = "fire
 birdMalariaData <- read.csv(url("http://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter02/chap02e3aBirdMalaria.csv"))
 head(birdMalariaData)
 
-# Optional step: Set the desired order of treatment categories in tables and graphs. The factor command allows us to order the levels so that the category "Egg removal" comes before "Control" in tables and graphs (categories are otherwise ordered alphabetically).
+# Optional step: Set the desired order of treatment categories in tables and graphs. The factor command allows us to order the levels so that
+# the category "Egg removal" comes before "Control" in tables and graphs (categories are otherwise ordered alphabetically).
 
 birdMalariaData$treatment <- factor(birdMalariaData$treatment, 
 	levels= c("Egg removal", "Control"))
@@ -230,13 +237,15 @@ boxplot(hemoglobin ~ population, data = hemoglobinData,
 	outcex = 1, outlty = "blank", las = 1, 
 	xlab="Male population", ylab = "Hemoglobin concentration (g/dL)")
 
-# Show the association between hemoglobin and population using the multiple histograms approach (Figure 2.3-5). The following commands use the lattice package, which must first be loaded.
+# Show the association between hemoglobin and population using the multiple histograms approach (Figure 2.3-5). 
+# The following commands use the lattice package, which must first be loaded.
 
 library(lattice)
 histogram(~ hemoglobin | population, data = hemoglobinData,
 	layout = c(1,4), col = "firebrick", breaks = seq(10,26,by=1))
 
-# Here we show commands to draw the multiple histograms in basic R, without using the lattice package. This approach is more tedious, but the resulting graphs are often easier to modify.
+# Here we show commands to draw the multiple histograms in basic R, without using the lattice package. 
+# This approach is more tedious, but the resulting graphs are often easier to modify.
 
 # Multiple histograms using base graphics, plotting them one at a time.
 # The "oma" option adjusts the outer margins of the whole figure
