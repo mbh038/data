@@ -3,13 +3,15 @@
 # ------------------------------------------------------------
 
 # Example 4.1. <a href="../wp-content/data/chapter04/chap04e1HumanGeneLengths.csv">The length of human genes
-# Describe the parameters of a known population of human gene lengths. Then, take a random sample from the known population to estimate the population mean.
+# Describe the parameters of a known population of human gene lengths. Then, take a random sample from the known population to estimate the
+# population mean.
 # Read the human gene length data, which we will use as our known population of measurements.
 
 humanGeneLengths <- read.csv(url("http://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter04/chap04e1HumanGeneLengths.csv"))
 head(humanGeneLengths)
 
-# Draw a histogram of the length of genes in the human genome (Figure 4.1-1). We first use subset to grab the large majority of genes that are 15,000 nucleotides or less in length and put into a second data frame. 
+# Draw a histogram of the length of genes in the human genome (Figure 4.1-1). We first use subset to grab the large majority of genes that
+# are 15,000 nucleotides or less in length and put into a second data frame. 
 
 geneLengthsUpTo15K <- subset(humanGeneLengths, geneLength <= 15000)
 hist(geneLengthsUpTo15K$geneLength, right = FALSE)
@@ -18,7 +20,11 @@ hist(geneLengthsUpTo15K$geneLength, right = FALSE)
 hist(geneLengthsUpTo15K$geneLength, breaks = seq(0,15000,500), 
 	xlab = "Gene length (Number of nucleotides)", ylab = "Frequency", 
 	col = "firebrick", las = 1, main = "", right = FALSE)
-# Calculate the population mean and standard deviation (Table 4.1-1). Just this once we must use the total number of genes N instead of N - 1 in the denominator when calculating the variance and standard deviation, because we treat all the genes of the human genome as a population for this exercise, not as a sample. For this reason we can't use the built-in commands to calculate variance and standard deviation, because they divide by N - 1.
+
+# Calculate the population mean and standard deviation (Table 4.1-1). Just this once we must use the total number of genes N instead of N - 1
+# in the denominator when calculating the variance and standard deviation, because we treat all the genes of the human genome as a population
+# for this exercise, not as a sample. For this reason we can't use the built-in commands to calculate variance and standard deviation, because
+# they divide by N - 1.
 
 meanGeneLength <- mean(humanGeneLengths$geneLength)
 meanGeneLength
@@ -31,8 +37,11 @@ sdGeneLength
 
 data.frame(Parameter = c("Mean", "Standard deviation"), 
 	Value = c(meanGeneLength, sdGeneLength))
+
 # <hr class = "short">
-# Take a single random sample of 100 genes from the population of genes. The argument replace = FALSE ensures that the same gene is not sampled twice. Save your random sample to a vector. Note: your sample won't be the identical to the one in the book, because each random sample is subject to sampling error.
+# Take a single random sample of 100 genes from the population of genes. The argument replace = FALSE ensures that the same gene is not
+# sampled twice. Save your random sample to a vector. Note: your sample won't be identical to the one in the book, because each random
+# sample is subject to sampling error.
 
 geneSample100 <- sample(humanGeneLengths$geneLength, size = 100, replace = FALSE)
 
@@ -41,25 +50,33 @@ geneSample100 <- sample(humanGeneLengths$geneLength, size = 100, replace = FALSE
 hist(geneSample100, right = FALSE)
 
 # Commands for a fancier version of the histogram are provided here.
-
 # These commands adjust the axes so that this sample's histogram can be 
 # compared with that of the population histogram.
 hist(geneSample100[geneSample100 <= 15000], breaks = seq(0,15000,500), 
 	right = FALSE, col = "firebrick", las = 1,  
 	xlab = "Gene length (no. nucleotides)",
 	ylab = "Frequency", main = "")
-# Calculate the sample mean and standard deviation of the unique random sample. Note: because of sampling error, your values won't be the identical to the ones in Table 4.1-2.
+
+# Calculate the sample mean and standard deviation of the unique random sample. Note: because of sampling error, your values won't be
+# identical to the ones in Table 4.1-2.
 
 mean(geneSample100)
 sd(geneSample100)
 
-# Calculate the standard error of the mean gene length for the unique sample of 100 genes. The length command indicates the number of elements in a vector variable, which is the sample size if there are no missing (NA) elements in the vector. You won't get the same value for the standard error as we obtained (146.3, p 102) because your unique random sample will not be the same as ours.
+# Calculate the standard error of the mean gene length for the unique sample of 100 genes. The length command indicates the number of
+# elements in a vector variable, which is the sample size if there are no missing (NA) elements in the vector. You won't get the same value
+# for the standard error as we obtained (146.3, p 102) because your unique random sample will not be the same as ours.
 
 n <- length(geneSample100)
 sd(geneSample100) / sqrt(n)
 
 # <hr class = "short">
-# Create a loop to take repeated random samples from the population and calculate the mean on each sample. This generates the sampling distribution of the mean. Take a large number (10,000) of random samples, each of size 100. On each iteration, the sample mean is calculated and saved in a vector named results100 (the samples themselves are not saved). The results vector is initialized before the loop. The term results100[i] refers to the ith element of results100, where i is a counter. This many iterations might take a few minutes to run on your computer. 
+
+# Create a loop to take repeated random samples from the population and calculate the mean on each sample. This generates the sampling
+# distribution of the mean. Take a large number (10,000) of random samples, each of size 100. On each iteration, the sample mean is 
+# calculated and saved in a vector named results100 (the samples themselves are not saved). The results vector is initialized before the loop.
+# The term results100[i] refers to the ith element of results100, where i is a counter. This many iterations might take a few minutes to 
+# run on your computer. 
 
 results100 <- vector() 
 for(i in 1:10000){
@@ -78,8 +95,7 @@ hist(results100, breaks = 50, right = FALSE)
 # The frequencies are converted to proportions, which are finally plotted.
 saveHist <- hist(results100, breaks = 50, right = FALSE, plot = FALSE)
 saveHist$counts <- saveHist$counts / sum(saveHist$counts) 
-plot(saveHist, , col = "firebrick", las = 1, main = "",
-	xlab = "Sample mean length (nucleotides)", ylab = "Relative frequency")
+plot(saveHist,  col = "firebrick", las = 1, main = "",xlab = "Sample mean length (nucleotides)", ylab = "Relative frequency")
 
 # Commands to compare the sampling distribution of the mean for different sample sizes (Figure 4.1-4) are shown here.
 
