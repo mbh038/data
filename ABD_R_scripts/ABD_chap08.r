@@ -19,7 +19,8 @@ birthDay$day <- factor(birthDay$day, levels = c("Sunday", "Monday",
 birthDayTable <- table(birthDay$day)
 data.frame(Frequency = addmargins(birthDayTable))
 
-# Bar graph of the birth data. The argument cex.names = 0.8 shrinks the names of the weekdays to 80% of the default size so that they fit in the graphics window -- otherwise one or more names may be dropped.
+# Bar graph of the birth data. The argument cex.names = 0.8 shrinks the names of the weekdays to 80% of the default size so that they fit in
+# the graphics window -- otherwise one or more names may be dropped.
 
 barplot(birthDayTable, cex.names = 0.8)
 
@@ -27,7 +28,9 @@ barplot(birthDayTable, cex.names = 0.8)
 # shortNames = substr(names(birthDayTable), 1, 3)
 # barplot(table(birthDay$day), names = shortNames, 
 # 	ylab = "Frequency", las = 1, col = "firebrick")
-# &chi;2 goodness-of-fit test. The vector p is the expected proportions rather than the expected frequencies, and they must sum to 1 (R nevertheless uses the expected frequencies when calculating the &chi; statistic). The &chi;2 value you get here is slightly more accurate than the calculation in the book, which was affected by rounding.
+# &chi;2 goodness-of-fit test. The vector p is the expected proportions rather than the expected frequencies, and they must sum to 1
+# (R nevertheless uses the expected frequencies when calculating the &chi; statistic). The &chi;2 value you get here is slightly more
+# accurate than the calculation in the book, which was affected by rounding.
 
 chisq.test(birthDayTable, p = c(52,52,52,52,52,53,52)/365)
 
@@ -53,7 +56,8 @@ data.frame(Frequency = addmargins(geneContentTable))
 
 chisq.test( geneContentTable, p = c(1055, 19235)/20290 )
 
-# The Agresti-Coull 95% confidence interval for the proportion of genes on the X. The command here assumes that you have installed the binom package (see the R pages for Chapter 7).
+# The Agresti-Coull 95% confidence interval for the proportion of genes on the X. The command here assumes that you have installed the binom
+# package (see the R pages for Chapter 7).
 
 library(binom)
 binom.confint(781, n = 20290, method = "ac")
@@ -145,7 +149,8 @@ extinctFreq <- data.frame(nExtinct = 0:20, obsFreq = as.vector(extinctTable2),
 	expFreq = expectedFrequency)
 extinctFreq
 
-# The low expected frequencies will violate the assumptions of the &chi;2 test, so we will need to group categories. Create a new variable that groups the extinctions into fewer categories.
+# The low expected frequencies will violate the assumptions of the &chi;2 test, so we will need to group categories. 
+# Create a new variable that groups the extinctions into fewer categories.
 
 extinctFreq$groups <- cut(extinctFreq$nExtinct, 
 	breaks = c(0, 2:8, 21), right = FALSE,
@@ -158,12 +163,18 @@ obsFreqGroup <- tapply(extinctFreq$obsFreq, extinctFreq$groups, sum)
 expFreqGroup <- tapply(extinctFreq$expFreq, extinctFreq$groups, sum)
 data.frame(obs = obsFreqGroup, exp = expFreqGroup)
 
-# The expected frequency for the last category, "8 or more", doesn't yet include the expected frequencies for the categories 21, 22, 23, and so on. However, the expected frequencies must sum to 76. In the following, we recalculate the expected frequency for the last group, expFreqGroup[length(expFreqGroup)], as 76 minus the sum of the expected frequencies for all the other groups.
+# The expected frequency for the last category, "8 or more", doesn't yet include the expected frequencies for the categories 21, 22, 23, 
+# and so on. However, the expected frequencies must sum to 76. In the following, we recalculate the expected frequency for the last group,
+# expFreqGroup[length(expFreqGroup)], as 76 minus the sum of the expected frequencies for all the other groups.
 
 expFreqGroup[length(expFreqGroup)] = 76 - sum(expFreqGroup[1:(length(expFreqGroup)-1)])
 data.frame(obs = obsFreqGroup, exp = expFreqGroup)
 
-# Finally, we are ready to carry out the &chi;2 goodness-of-fit test. R gives us a warning here because one of the expected frequencies is less than 5. However, we have been careful to meet the assumptions of the &chi;2 test, so let's persevere. Once again, R doesn't know that we've estimated a parameter from the data (the mean), so it won't use the correct degrees of freedom when calculating the P-value. As before, we need to grab the &chi;2 value calculated by chisq.test and recalculate P using the correct degrees of freedom. Since the number of categories is now 8, the correct degrees of freedom is 8 - 1 - 1 = 6.
+# Finally, we are ready to carry out the &chi;2 goodness-of-fit test. R gives us a warning here because one of the expected frequencies is
+# less than 5. However, we have been careful to meet the assumptions of the &chi;2 test, so let's persevere. Once again, R doesn't know that
+# we've estimated a parameter from the data (the mean), so it won't use the correct degrees of freedom when calculating the P-value.
+# As before, we need to grab the &chi;2 value calculated by chisq.test and recalculate P using the correct degrees of freedom.
+# Since the number of categories is now 8, the correct degrees of freedom is 8 - 1 - 1 = 6.
 
 saveChiTest <- chisq.test(obsFreqGroup, p = expFreqGroup/76)
 saveChiTest # Wrong degrees of freedom, so wrong P-value!

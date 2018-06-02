@@ -4,7 +4,8 @@
 
 # Table 7.1-1 and Figure 7.1-1. Binomial distribution with n = 27 and p = 0.25
 # Table and histogram of binomial probabilities. Uses the data from Chapter 6 on the genetics of mirror-image flowers.
-# Calculate a binomial probability, the probability of obtaining X successes in n trials when trials are independent and probability of success p is the same for every trial. The probability of getting exactly 6 left-handed flowers when n = 27 and p = 0.25 is
+# Calculate a binomial probability, the probability of obtaining X successes in n trials when trials are independent and probability of
+# success p is the same for every trial. The probability of getting exactly 6 left-handed flowers when n = 27 and p = 0.25 is
 
 dbinom(6, size = 27, prob = 0.25)
 
@@ -15,7 +16,8 @@ probx <- dbinom(xsuccesses, size = 27, prob = 0.25)
 probTable <- data.frame(xsuccesses, probx)
 probTable
 
-# Histogram of binomial probabilities for the number of left-handed flowers out of 27. This illustrates the full binomial distribution when n = 27 and p = 0.25.
+# Histogram of binomial probabilities for the number of left-handed flowers out of 27. This illustrates the full binomial distribution
+# when n = 27 and p = 0.25.
 
 barplot(height = probx, names.arg = xsuccesses, space = 0, las = 1, 
 	ylab = "Probability", xlab = "Number of left-handed flowers")
@@ -24,14 +26,16 @@ barplot(height = probx, names.arg = xsuccesses, space = 0, las = 1,
 
 # Figure 7.1-2. Sampling distribution of a binomial proportion
 # Compare sampling distributions for the proportion based on n = 10 and n = 100.
-# Take a large number of random samples of n = 10 from a population having probability of success p = 0.25. Convert to proportions by dividing by the sample size. Do the same for the larger sample size n = 100. The following commands use 10,000 random samples.
+# Take a large number of random samples of n = 10 from a population having probability of success p = 0.25. Convert to proportions by dividing
+# by the sample size. Do the same for the larger sample size n = 100. The following commands use 10,000 random samples.
 
 successes10 <- rbinom(10000, size = 10, prob = 0.25)
 proportion10 <- successes10 / 10
 successes100 <- rbinom(10000, size = 100, prob = 0.25)
 proportion100 <- successes100 / 100
 
-# Plot and visually compare the sampling distributions of the proportions based on n = 10 and n = 100. The par(mfrow = c(2,1)) command sets up a graph window that will plot both graphs arranges in 2 rows and 1 column.
+# Plot and visually compare the sampling distributions of the proportions based on n = 10 and n = 100. The par(mfrow = c(2,1)) command sets up
+# a graph window that will plot both graphs arranges in 2 rows and 1 column.
 
 par(mfrow = c(2,1))
 hist(proportion10, breaks = 10, right = FALSE, xlim = c(0,1),
@@ -71,17 +75,22 @@ head(mouseGenes)
 
 table(mouseGenes$onX)
 
-# Calculate the binomial probabilities of all possible outcomes under the null hypothesis (Table 7.2-1). Under the binomial distribution with n = 25 and p = 0.061, the number of successes can be any integer between 0 and 25. 
+# Calculate the binomial probabilities of all possible outcomes under the null hypothesis (Table 7.2-1). Under the binomial distribution with
+# n = 25 and p = 0.061, the number of successes can be any integer between 0 and 25. 
 
 xsuccesses <- 0:25
 probx <- dbinom(xsuccesses, size = 25, prob = 0.061)
 data.frame(xsuccesses, probx)
 
-# Use these probabilities to calculate the P-value corresponding to an observed 10 spermatogenesis genes on the X chromosome. Remember to multiply the probability of 10 or more successes by 2 for the two-tailed test result.
+# Use these probabilities to calculate the P-value corresponding to an observed 10 spermatogenesis genes on the X chromosome. Remember to
+# multiply the probability of 10 or more successes by 2 for the two-tailed test result.
 
 2 * sum(probx[xsuccesses >= 10])
 
-# For a faster result, try R's built-in binomial test. The resulting P-value is slightly different from our calculation. In the book, we get the two-tailed probability by multiplying the one-tailed probability by 2. As we say on page 188, computer programs may calculate the probability of extreme results at the "other" tail with a different method. The output of binom.test includes a confidence interval for the proportion using the Clopper-Pearson method, which is more conservative than the Agresti-Coull method.
+# For a faster result, try R's built-in binomial test. The resulting P-value is slightly different from our calculation. In the book, we get
+# the two-tailed probability by multiplying the one-tailed probability by 2. As we say on page 188, computer programs may calculate the 
+# probability of extreme results at the "other" tail with a different method. The output of binom.test includes a confidence interval for the 
+# proportion using the Clopper-Pearson method, which is more conservative than the Agresti-Coull method.
 
 binom.test(10, n = 25, p = 0.061)
 
@@ -118,7 +127,10 @@ lower <- pPrime - 1.96 * sqrt( (pPrime * (1 - pPrime))/(n + 4) )
 upper <- pPrime + 1.96 * sqrt( (pPrime * (1 - pPrime))/(n + 4) )
 c(lower = lower, upper = upper)
 
-# Agresti-Coull 95% confidence interval for the population proportion using the binom package. To use this package you will need to install it (this needs to be done only once per computer) and load it using the library command (this needs to be done once per R session). The confidence interval from the binom package will be very slightly different from the one you calculated above because the formula we use takes a slight shortcut.
+# Agresti-Coull 95% confidence interval for the population proportion using the binom package. To use this package you will need to install
+# it (this needs to be done only once per computer) and load it using the library command (this needs to be done once per R session).
+# The confidence interval from the binom package will be very slightly different from the one you calculated above because the formula we
+# use takes a slight shortcut.
 
 # install.packages("binom", dependencies = TRUE)
 library(binom)
