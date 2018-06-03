@@ -1,0 +1,307 @@
+
+attaching and detaching data
+----------------------------
+d1<-read.table(file.choose(),header=T)
+attach(d1)
+
+detach(d1)
+
+removing objects
+----------------
+
+remove(colour)
+rm(colour)
+
+rm(list=ls()) : removes everything
+
+checking the names of the variables
+-----------------------------------
+names(dtfr)
+
+standard errors
+---------------
+se <- function(x) sqrt(var(x)/length(x))
+
+
+boxplots of medians
+-------------------
+Treatment <- factor(Treatment)
+plot(Treatment, Sniffs, xlab="Treatment",ylab="Total sniffs")
+
+
+plot of one-way means & SEs
+---------------------------
+plot.error.bars <- function(ymeans, yse, nn) {
+xv<-barplot(ymeans,ylim=c(0,(max(ymeans)+max(yse))),names=nn,
+ylab=deparse(substitute(ymeans)))
+g=(max(xv)-min(xv))/50 
+for (i in 1:length(xv)) {
+lines(c(xv[i],xv[i]),c(ymeans[i]+yse[i],ymeans[i]-yse[i]))
+lines(c(xv[i]-g,xv[i]+g),c(ymeans[i]+yse[i],ymeans[i]+yse[i]))
+lines(c(xv[i]-g,xv[i]+g),c(ymeans[i]-yse[i],ymeans[i]-yse[i]))
+}}
+
+then
+
+msniffs<-tapply(Sniffs, Treatment, mean)
+sesniffs<-tapply(Sniffs, Treatment, se)
+labels <- as.character(levels(Treatment))
+plot.error.bars(msniffs,sesniffs,labels)
+
+
+
+plot of two-way means & SEs, with colours
+-----------------------------------------
+plot.error.bars <- function(ymeans, yse, nn) {
+xv<-barplot(ymeans,beside=T,col=rainbow(3),ylim=c(0,(max(ymeans)+max(yse))),names=nn,
+ylab=deparse(substitute(ymeans)))
+g=(max(xv)-min(xv))/50 
+for (i in 1:length(xv)) {
+lines(c(xv[i],xv[i]),c(ymeans[i]+yse[i],ymeans[i]-yse[i]))
+lines(c(xv[i]-g,xv[i]+g),c(ymeans[i]+yse[i],ymeans[i]+yse[i]))
+lines(c(xv[i]-g,xv[i]+g),c(ymeans[i]-yse[i],ymeans[i]-yse[i]))
+}}
+
+
+
+
+Scatterplots
+------------
+
+plot(Testosterone, Sniffs, xlab="Testosterone", ylab="Sniffs")
+
+with different symbols and colours, eg
+plotchr <- ifelse(Treatment==1,1,16)
+plot(Testosterone, Sniffs, pch = plotchr, col = Treatment)
+
+symbol sizes increased all by 50%
+plot(Testosterone, Sniffs, pch = plotchr, col = Treatment, cex=1.5)
+
+correlations (default=Pearson)
+------------------------------
+
+cor.test(x,y,method="spearman")
+
+
+Frequencies
+-----------
+(a) integers
+freqs <- table(Sniffs)
+barplot(freqs,ylab="frequency",xlab="sniffs",col="red")
+
+(b) any data, controlling the x limits and number of bins
+
+hist(y, breaks = seq(-lim,+lim,binwidth))
+
+
+testing for normality (or any assumed error distr)
+--------------------------------------------------
+
+fit the model & obtain diagnostics:
+
+m1 <- glm(size ~ grassh)
+plot(m1)
+
+shapiro.test(resid(m1))
+Bartlett.test(size ~ grassh)
+fligner.test(size~grassh)
+
+fitting a scaled normal curve to residuals from a model:
+
+hist(resid(m1), breaks=seq(-6,6,0.5))
+xv <- seq(-6,6,0.1)
+hist.ht <- length(resid(m1))*0.5
+yv <- dnorm(xv,mean=0.0,sd=sqrt(var(resid(m1))))*hist.ht
+lines(xv,yv)
+
+qqnorm(resid(m1))
+qqline(resid(m1),lty=2)
+
+
+Generating sequences of numbers
+-------------------------------
+y <- rep(1:2,times=c(130,46))
+y <- rep(c("control","treated"),c(40,40))
+
+if equal replication then
+y <- rep(1:4,each=8)
+
+y <- as.factor(rep(c(names(dtfr)),table(grps)))
+
+
+ordering treatments
+-------------------
+treatment <- ordered(treatment,levels=c("none","low","medium","high"))
+
+
+user-defined contrasts
+----------------------
+
+contrasts(factor) <- cbind(c(2,-1,-1),c(0,1,-1))
+summary.lm(aov(response ~ factor))
+
+other contrasts (treatment ones are the default)
+------------------------------------------------
+
+options(contrasts=c("contr.treatment","contr.helmert","contr.poly")
+
+
+counting up the number of each category
+---------------------------------------
+z <- table(y)
+
+doing a chi-squared contingency table with 3:1 expected ratio
+-------------------------------------------------------------
+chisq.test(c(130,46),p=c(0.75,0.25))
+
+contingency table
+-----------------
+chisq.test(matrix(c(130,46,101,75),nrow=2))
+
+doing a t-test
+--------------
+with two vectors for the groups, one-tailed A>B
+t.test(vectorA, vectorB, paired=T, alternative=c("greater"))
+
+with a data and a grouping vector
+t.test(data~group)
+
+non-parametric versions
+-----------------------
+wilcox.test(vectorA,vectorB,paired=T,alternative=c("greater"))
+wilcox.test(data~group)
+
+kruskal.test(data, groups)
+kruskal.test(data~groups, subset = )
+
+
+Meddis specific test
+--------------------
+*NB no tie correction incorporated
+
+np1way.specific <- function(data,grps,coeff) {
+r1<-rank(data)
+rsum<-tapply(r1,grps,sum)
+nsum<-tapply(r1,grps,length)
+L<-sum(coeff*rsum)
+N<-length(data)
+E<-(N+1)*sum(nsum*coeff)/2
+V<-(N+1)*(N*sum(nsum*coeff^2) - sum(nsum*coeff)^2)/12
+Z<-(L-E)/sqrt(V)
+Z
+}
+
+Meddis specific test with tie correction
+----------------------------------------
+
+npanova.sp <- function(data,grps,coeff) {
+r1 <- rank(data)
+rsum <- tapply(r1,grps,sum)
+nsum <- tapply(r1,grps,length)
+L <- sum(coeff*rsum)
+N <- length(data)
+E <- (N+1)*sum(nsum*coeff)/2
+V <- (N+1)*(N*sum(nsum*coeff^2) - sum(nsum*coeff)^2)/12
+Z <- (L-E)/sqrt(V)
+r2 <- sort(data)
+TC = 0
+ii <- N-1
+for (i in 1:ii) {
+jj = i+1
+tie = 1
+for (j in jj:len) {
+if (r2[i]==r2[j]) tie=tie+1 else j=len
+}
+TC = TC + ((tie^3)-tie)
+}
+TC = 1 - (TC/((len^3)-len))
+Z = Z/sqrt(TC)
+Z
+}
+
+
+
+
+n-p contrasts
+-------------
+
+np1way.contrast<- function(data,grps,contrasts) {
+contr<-rep(contrasts,table(grps))
+dneg<-data[contr<0]
+dpos<-data[contr>0]
+wilcox.test(dneg,dpos,alternative=c("less"))
+}
+
+
+general n- for repeated measures =
+Friedman test (which has a routine in R)
+but this shows the tie correction in operation
+----------------------------------------------
+
+nprm.general <- function(dtfr,contrasts) {
+cols<-length(dtfr[1,])
+rows<-length(dtfr[,1])
+len<-rows*cols
+ranks<-c(1:len)
+ranks<-matrix(ranks,nrow=rows)
+for (i in 1:rows) ranks[i,]<-rank(dtfr[i,])
+rsums<-colSums(ranks)
+H = (12*sum(rsums*rsums)/(rows*cols*(cols+1)))-(3*rows*(cols+1))
+cols<-length(dtfr[1,])
+rows<-length(dtfr[,1])
+tie <- 0
+tcorr <- 0
+nt <- 0
+for (i in 1:rows) {
+btie=tie
+jj<-cols-1
+for (j in 1:jj) {
+kk=j+1
+for (k in kk:cols) {
+if (dtfr[i,j]==dtfr[i,k]) tie=tie+1 else tie=tie
+}}
+if (btie<tie) nt=tie-btie else nt=0
+if (nt==1) nt=nt+1
+tcorr = tcorr + (1-(((nt^3)-nt)/((cols^3)-cols)))
+}
+H = H*rows/tcorr
+H
+}
+
+
+specific n-p for repeated measures
+----------------------------------
+
+nprm.specific <- function(dtfr,contrasts) {
+cols<-length(dtfr[1,])
+rows<-length(dtfr[,1])
+len<-rows*cols
+ranks<-c(1:len)
+ranks<-matrix(ranks,nrow=rows)
+for (i in 1:rows) ranks[i,]<-rank(dtfr[i,])
+rsums<-colSums(ranks)
+OL <- sum(rsums*contrasts)
+EL<-0
+VARL<-0
+tie<-0
+btie<-0
+E1 <- sum(contrasts*contrasts)
+E2 <- sum(contrasts)
+for (i in 1:rows) {
+EL = EL + ((cols+1)*E2/2)
+btie=tie
+jj<-cols-1
+for (j in 1:jj) {
+kk=j+1
+for (k in kk:cols) {
+if (dtfr[i,j]==dtfr[i,k]) tie=tie+1 else tie=tie
+}}
+if (btie<tie) nt=tie-btie else nt=0
+if (nt==1) nt=nt+1
+tcorr = (1-(((nt^3)-nt)/((cols^3)-cols)))
+VARL = VARL + (cols+1)*((cols*E1) - (E2*E2))*tcorr/12
+}
+Z = (OL - EL)/sqrt(VARL)
+Z
+}
+

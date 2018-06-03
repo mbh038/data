@@ -9,7 +9,8 @@
 titanic <- read.csv(url("http://www.zoology.ubc.ca/~schluter/WhitlockSchluter/wp-content/data/chapter09/chap09f1.1Titanic.csv"))
 head(titanic)
 
-# Contingency table of the association between sex and survival. The addmargins function includes the row and columns sums with the contingency table.
+# Contingency table of the association between sex and survival. The addmargins function includes the row and columns sums with the
+# contingency table.
 
 titanicTable <- table(titanic$survival, titanic$sex)
 addmargins(titanicTable)
@@ -77,12 +78,15 @@ ciOR = exp(ciLnOR) # transform back to ratio scale
 names(ciOR) = c("lower","upper")
 ciOR
 
-# Calculate relative risk using the epitools package. The layout expected by the riskratio function is the complete opposite of the layout used in the book. To use the command with a contingency table in book style (such as cancerTable), we need to flip (transpose) the table and reverse the order of the rows. We can do this all at once with the following arguments to the riskratio function.
+# Calculate relative risk using the epitools package. The layout expected by the riskratio function is the complete opposite of the layout
+# used in the book. To use the command with a contingency table in book style (such as cancerTable), we need to flip (transpose) the table
+# and reverse the order of the rows. We can do this all at once with the following arguments to the riskratio function.
 
 library(epitools)
 riskratio(t(cancerTable), rev = "both", method = "wald")
 
-# Notice that the result differs slightly from the relative risk value given in the book for these same data (1.007) because rounding error here is reduced. 
+# Notice that the result differs slightly from the relative risk value given in the book for these same data (1.007) because rounding error
+# here is reduced. 
 # For clean output only for the relative risk, including the 95% confidence interval, use the following command:
 
 riskratio(t(cancerTable), method = "wald", rev = "both")$measure[-1,]
@@ -135,7 +139,8 @@ oddsratio(toxTable, method = "wald")$measure[-1,] # clean output
 # ------------------------------------------------------------
 
 # Example 9.4. <a href="../wp-content/data/chapter09/chap09e3ToxoplasmaAndAccidents.csv">Worm gets bird
-# &chi;2 contingency test to test association between trematode infection status of killifish and their fate (eaten or not eaten) in the presence of predatory birds.
+# &chi;2 contingency test to test association between trematode infection status of killifish and their fate (eaten or not eaten) in the
+# presence of predatory birds.
 # Read and inspect the data.
 
 worm <- read.csv(url("http://www.zoology.ubc.ca/~schluter/WhitlockSchluter/wp-content/data/chapter09/chap09e4WormGetsBird.csv"))
@@ -157,16 +162,20 @@ addmargins(wormTable)
 mosaicplot( t(wormTable), col = c("firebrick", "goldenrod1"), cex.axis = 1, 
 	sub = "Infection status", ylab = "Relative frequency")
 
-# &chi;2 contingency test. We include the argument correct = FALSE to avoid Yates' correction. This has no effect except in 2 x 2 tables, but we keep it here for demonstration purposes. 
+# &chi;2 contingency test. We include the argument correct = FALSE to avoid Yates' correction. This has no effect except in 2 x 2 tables,
+# but we keep it here for demonstration purposes. 
 
 saveChiTest <- chisq.test(worm$fate, worm$infection, correct = FALSE)
 saveChiTest
 
-# The expected frequencies under null hypothesis are included with the results, but aren't normally shown. Type saveChiTest$expected to extract them. Include the addmargins function if you want to see the row and column sums too.
+# The expected frequencies under null hypothesis are included with the results, but aren't normally shown. Type saveChiTest$expected to
+# extract them. Include the addmargins function if you want to see the row and column sums too.
 
 addmargins(saveChiTest$expected)
 
-# G-test applied to the worm-gets-bird data (Section 9.6). R has no simple, built-in function to carry out the G-test with goodness-of-fit data. Code for a command g.test by Brent Larget is available <a href="http://www.stat.wisc.edu/~st571-1/gtest.R">here. Below, we source this code, which then allows you to use his function g.test.
+# G-test applied to the worm-gets-bird data (Section 9.6). R has no simple, built-in function to carry out the G-test with goodness-of-fit
+# data. Code for a command g.test by Brent Larget is available <a href="http://www.stat.wisc.edu/~st571-1/gtest.R">here. Below, we source
+# this code, which then allows you to use his function g.test.
 
 source("http://www.stat.wisc.edu/~st571-1/gtest.R")
 g.test(wormTable)
@@ -184,7 +193,8 @@ vampire <- read.csv(url("http://www.zoology.ubc.ca/~schluter/WhitlockSchluter/wp
 vampireTable <- table(vampire$bitten, vampire$estrous)
 vampireTable
 
-# Expected frequencies under null hypothesis of independence. R complains because of the violation of assumptions. Just in case you hadn't noticed.
+# Expected frequencies under null hypothesis of independence. R complains because of the violation of assumptions. Just in case you hadn't
+# noticed.
 
 saveTest <- chisq.test(vampire$bitten, vampire$estrous, correct = FALSE) 
 saveTest$expected

@@ -10,4 +10,9 @@ R scripts for ABD chapters
 http://whitlockschluter.zoology.ubc.ca
 
 
+### Barnard AQB data 4e
+Data from Barnard, Gilbert & McGregor (2011) _Asking Questions in Biology_ , 4e, Pearson
+
+
+
 
