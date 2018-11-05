@@ -34,9 +34,12 @@ hist(flu$age, right = FALSE)
 hist(flu$age, right = FALSE, breaks = seq(0,102,2), col = "firebrick", las = 1, 
 	xlab = "Age at death (yrs)", ylab = "Frequency", main = "")
 
-# Demonstrate the central limit theorem. Treat the age at death measurements from Switzerland in 1918 as the population. Take a large number of random samples, each of size n, from the population of age at death measurements and plot the sample means. Note: your results won't be the identical to the one in Figure 10.6-2, because 10,000 random samples is not large enough for extreme accuracy. Change n below to another number and rerun to see the effects of sample size on the shape of the distribution of sample means.
+# Demonstrate the central limit theorem. Treat the age at death measurements from Switzerland in 1918 as the population. Take a large number
+# of random samples, each of size n, from the population of age at death measurements and plot the sample means. Note: your results won't be
+# the identical to the one in Figure 10.6-2, because 10,000 random samples is not large enough for extreme accuracy. Change n below to another
+# number and rerun to see the effects of sample size on the shape of the distribution of sample means.
 
-n <- 4
+n <- 40
 results <- vector()
 for(i in 1:10000){
 	AgeSample <- sample(flu$age, size = n, replace = FALSE)
