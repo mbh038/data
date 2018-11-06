@@ -16,7 +16,8 @@ Data from Barnard, Gilbert & McGregor (2011) _Asking Questions in Biology_ , 4e,
 ### data
 
 #### EDA
-anscombe.
+
+* anscombe.
 
 See  
 Edward R. Tufte, The Visual Display of Quantitative Information (Cheshire, Connecticut: Graphics Press, 1983), pp. 14-15.
